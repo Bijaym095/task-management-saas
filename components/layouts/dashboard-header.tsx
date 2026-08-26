@@ -1,13 +1,12 @@
-interface DashboardHeaderProps extends React.ComponentProps<"div"> {
-  sidebarTrigger: React.ReactNode;
-}
+"use client";
 
-const DashboardHeader = (props: DashboardHeaderProps) => {
-  const { sidebarTrigger, ...headerProps } = props;
+import { SidebarTrigger } from "../ui/sidebar";
+
+const DashboardHeader = (props: React.ComponentProps<"div">) => {
   return (
-    <header className="w-full py-4 bg-blue-400" {...headerProps}>
+    <header className="w-full py-4 bg-white text-[#0F172A]" {...props}>
       <div className="container">
-        {sidebarTrigger}
+        <SidebarTrigger />
         Header
       </div>
     </header>

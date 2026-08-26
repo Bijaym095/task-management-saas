@@ -1,114 +1,106 @@
-import { DASHBOARD_ROUTES } from "@/constants";
-import { Sidebar, SidebarContent, SidebarFooter } from "../ui/sidebar";
+"use client";
 
-const DashboardSidebar = () => {
-  const DASHBOARD_MENUS = [
-    {
-      name: "Tasks",
-      link: DASHBOARD_ROUTES.tasks.root,
-      submenu: [
-        {
-          name: "All Tasks",
-          link: DASHBOARD_ROUTES.tasks.root,
-        },
-        {
-          name: "Todo",
-          link: DASHBOARD_ROUTES.tasks.todo,
-        },
-        {
-          name: "In Progress",
-          link: DASHBOARD_ROUTES.tasks.inProgress,
-        },
-        {
-          name: "Completed",
-          link: DASHBOARD_ROUTES.tasks.completed,
-        },
-        {
-          name: "Overdue",
-          link: DASHBOARD_ROUTES.tasks.overdue,
-        },
-      ],
-    },
-    {
-      name: "Projects",
-      link: DASHBOARD_ROUTES.projects.root,
-      submenu: [
-        {
-          name: "All Projects",
-          link: DASHBOARD_ROUTES.projects.root,
-        },
-        {
-          name: "Active",
-          link: DASHBOARD_ROUTES.projects.active,
-        },
-        {
-          name: "Completed",
-          link: DASHBOARD_ROUTES.projects.completed,
-        },
-        {
-          name: "Archived",
-          link: DASHBOARD_ROUTES.projects.archived,
-        },
-      ],
-    },
-    {
-      name: "Team",
-      link: DASHBOARD_ROUTES.team.root,
-      submenu: [
-        {
-          name: "Members",
-          link: DASHBOARD_ROUTES.team.members,
-        },
-        {
-          name: "Invitations",
-          link: DASHBOARD_ROUTES.team.invitations,
-        },
-        {
-          name: "Roles",
-          link: DASHBOARD_ROUTES.team.roles,
-        },
-      ],
-    },
-    {
-      name: "Notifications",
-      link: DASHBOARD_ROUTES.notifications,
-    },
-    {
-      name: "Activity",
-      link: DASHBOARD_ROUTES.activity,
-    },
-    {
-      name: "Settings",
-      link: DASHBOARD_ROUTES.settings.root,
-      submenu: [
-        {
-          name: "General",
-          link: DASHBOARD_ROUTES.settings.general,
-        },
-        {
-          name: "Notifications",
-          link: DASHBOARD_ROUTES.settings.notifications,
-        },
-        {
-          name: "Danger Zone",
-          link: DASHBOARD_ROUTES.settings.dangerZone,
-        },
-      ],
-    },
-  ];
+import { DASHBOARD_MENUS } from "@/constants";
+import { ChevronDown, FaceAngry, Settings } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+} from "../ui/sidebar";
 
+const DashboardSidebar = ({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) => {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <div className="flex items-center gap-2 px-1">
+          <FaceAngry className="size-5 shrink-0" />
+          <span className="truncate font-semibold group-data-[collapsible=icon]:hidden">
+            Task Management Saas
+          </span>
+        </div>
+      </SidebarHeader>
+
       <SidebarContent>
-        <ul>
-          {DASHBOARD_MENUS.map(({ name, link }) => (
-            <li key={name}>
-              <a href={link}>{name}</a>
-            </li>
-          ))}
-        </ul>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {DASHBOARD_MENUS.map((menu) => {
+                if (!menu.submenu) {
+                  return (
+                    <SidebarMenuItem key={menu.name}>
+                      <SidebarMenuButton
+                        className="p-4 rounded h-auto!"
+                        render={<a href={menu.link} />}
+                        tooltip={menu.name}
+                      >
+                        <menu.icon />
+                        <span>{menu.name}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                }
+
+                return (
+                  <Collapsible
+                    key={menu.name}
+                    defaultOpen
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        className="py-3 px-4 rounded h-auto! cursor-pointer"
+                        render={<CollapsibleTrigger />}
+                        tooltip={menu.name}
+                      >
+                        <menu.icon />
+                        <span>{menu.name}</span>
+                        <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180 group-data-[collapsible=icon]:hidden" />
+                      </SidebarMenuButton>
+                      <CollapsibleContent className="pl-6">
+                        <SidebarMenuSub className="mx-0">
+                          {menu.submenu.map((submenu) => (
+                            <SidebarMenuSubItem key={submenu.name}>
+                              <SidebarMenuSubButton
+                                className="h-auto! py-2 px-4 rounded"
+                                render={<a href={submenu.link} />}
+                              >
+                                <span>{submenu.name}</span>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>SidebarFooter</SidebarFooter>
+
+      <SidebarFooter>
+        <div className="flex gap-4">
+          <Settings />
+          <span className="group-data-[collapsible=icon]:hidden">SidebarFooter</span>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 };
