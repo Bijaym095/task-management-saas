@@ -1,0 +1,1 @@
+export { DASHBOARD_MENUS } from './dashboard-menus';
